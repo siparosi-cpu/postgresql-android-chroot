@@ -1,0 +1,44 @@
+diff --git a/exports.txt b/exports.txt
+index 77d8b36..3d9876d 100644
+--- a/exports.txt
++++ b/exports.txt
+@@ -4,6 +4,7 @@
+ 		shmget;
+ 		shmat;
+ 		shmdt;
++                __shmctl64;
+ 
+ 	local: *;         # hide everything else
+ };
+diff --git a/shmem.c b/shmem.c
+index 4fa4d99..5b485ec 100644
+--- a/shmem.c
++++ b/shmem.c
+@@ -112,12 +112,12 @@ int shmget (key_t key, size_t size, int flags)
+ 	int idx;
+ 
+ 	DBG ("%s: key %d size %zu flags 0%o (flags are ignored)", __PRETTY_FUNCTION__, key, size, flags);
+-	if (key != IPC_PRIVATE)
+-	{
+-		DBG ("%s: key %d != IPC_PRIVATE,  this is not supported", __PRETTY_FUNCTION__, key);
+-		errno = EINVAL;
+-		return -1;
+-	}
++	//if (key != IPC_PRIVATE)
++	//{
++	//	DBG ("%s: key %d != IPC_PRIVATE,  this is not supported", __PRETTY_FUNCTION__, key);
++	//	errno = EINVAL;
++	//	return -1;
++	//}
+ 	if (!listening_thread_id)
+ 	{
+ 		int i;
+@@ -449,3 +449,8 @@ int shmctl (int shmid, int cmd, struct shmid_ds *buf)
+ 	errno = EINVAL;
+ 	return -1;
+ }
++
++int __shmctl64 (int shmid, int cmd, void *buf)
++{
++    return shmctl(shmid, cmd, (struct shmid_ds *)buf);
++}
