@@ -1,0 +1,46 @@
+# ============================================================
+# PostgreSQL Android Chroot
+# Files that must not be committed to the repository
+# ============================================================
+
+# Secrets / credentials
+.env
+.env.*
+*.secret
+*.key
+*.pem
+credentials*
+secrets*
+
+# PostgreSQL runtime/data
+data/
+pgdata/
+postmaster.pid
+postmaster.opts
+*.log
+
+# PostgreSQL configuration containing credentials
+postgresql.auto.conf
+.pgpass
+
+# Compiled binaries and libraries
+*.so
+*.o
+*.a
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*~
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Benchmark temporary data
+benchmarks/tmp/
