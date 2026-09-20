@@ -573,6 +573,29 @@ Os próximos experimentos incluem:
 
 ---
 
+## Direção futura: cluster de dispositivos Android
+
+Uma das direções futuras deste projeto é investigar a utilização de múltiplos dispositivos Android físicos trabalhando em conjunto como uma infraestrutura PostgreSQL distribuída de baixo custo.
+
+A arquitetura atual já fornece uma base experimental para essa evolução, com PostgreSQL executado nativamente para a arquitetura ARM dentro do Ubuntu 24.04 em chroot e replicação física por streaming entre dispositivos Android.
+
+O objetivo futuro é expandir os experimentos para uma arquitetura composta por diferentes funções, incluindo:
+
+- um dispositivo Android atuando como servidor PostgreSQL primary;
+- um ou mais dispositivos ARM64 atuando como hot standby e servidores de leitura;
+- dispositivos adicionais atuando como nós de processamento e ingestão de dados;
+- distribuição de consultas de leitura entre primary e réplicas;
+- avaliação de diferentes estratégias de roteamento e balanceamento de carga;
+- comparação da comunicação entre os dispositivos utilizando Wi-Fi e Ethernet;
+- testes de comportamento do conjunto durante falhas ou desconexões temporárias de nós;
+- inclusão de novos dispositivos Android para avaliar a expansão horizontal da arquitetura.
+
+A intenção não é afirmar que a configuração atual constitui um cluster PostgreSQL completo ou pronto para produção. O objetivo é investigar experimentalmente até que ponto smartphones Android podem cooperar como nós de uma infraestrutura PostgreSQL, documentando desempenho, limitações, falhas e soluções encontradas em hardware real.
+
+À medida que novos dispositivos e experimentos forem adicionados, os resultados serão documentados neste repositório.
+
+---
+
 ## Estrutura do repositório
 
 ```text
