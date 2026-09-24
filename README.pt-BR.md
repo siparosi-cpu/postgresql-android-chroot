@@ -49,6 +49,44 @@ Essa camada de compatibilidade tornou-se uma parte importante para conseguir exe
 
 ---
 
+## História do projeto
+
+Este projeto começou há mais de dois anos como uma tentativa de executar PostgreSQL de forma funcional em dispositivos Android utilizando um ambiente Linux completo.
+
+As primeiras experiências utilizaram soluções baseadas em Termux e outros métodos de execução de distribuições Linux no Android. Embora essas abordagens permitissem criar ambientes Linux, elas apresentavam limitações importantes para o objetivo deste projeto. Soluções baseadas em virtualização também foram consideradas, mas o custo de recursos e a perda de desempenho tornavam essa abordagem pouco adequada para dispositivos móveis com hardware limitado.
+
+A partir disso, os experimentos passaram a utilizar dispositivos Android com bootloader desbloqueado e acesso root. Com privilégios de superusuário, foi possível criar um ambiente Ubuntu em chroot diretamente sobre o kernel Android e compilar o PostgreSQL dentro desse ambiente.
+
+Essa abordagem resolveu grande parte das limitações encontradas anteriormente, mas revelou um problema mais profundo: o mecanismo tradicional de memória compartilhada utilizado pelo PostgreSQL não funcionava corretamente dentro do ambiente Android.
+
+Durante um longo período, foram pesquisadas diferentes alternativas e referências técnicas sobre compartilhamento de memória System V no Android. As soluções encontradas inicialmente não eram suficientes para permitir a execução normal do PostgreSQL. Ferramentas de inteligência artificial disponíveis naquela época também foram utilizadas como apoio à investigação, mas não forneceram uma solução funcional para esse problema específico.
+
+A pesquisa continuou até a descoberta do projeto open source [`android-shmem`](https://github.com/pelya/android-shmem), desenvolvido originalmente por pelya e publicado muitos anos antes. Esse projeto implementa uma camada de compatibilidade para funções de memória compartilhada ausentes ou limitadas no Android.
+
+A partir da análise do código-fonte em C, de testes sucessivos e de adaptações específicas, foi possível modificar o comportamento necessário para que o PostgreSQL pudesse utilizar memória compartilhada dentro do Ubuntu em chroot no Android.
+
+Esse foi o ponto em que o projeto deixou de ser apenas uma tentativa experimental de executar PostgreSQL em um smartphone e passou a evoluir para uma plataforma de testes mais ampla.
+
+Desde então, o trabalho passou a incluir:
+
+- compilação nativa do PostgreSQL para diferentes arquiteturas ARM;
+- execução do PostgreSQL dentro de Ubuntu 24.04 em chroot;
+- adaptação e testes do `android-shmem`;
+- suporte experimental a dispositivos ARM64 e ARMHF;
+- acesso remoto ao PostgreSQL pela rede;
+- replicação física por streaming entre dispositivos Android;
+- utilização de hot standby para consultas;
+- benchmarks de ingestão com milhões de registros;
+- análise de geração e retenção de WAL;
+- testes de recuperação de réplica após perda de segmentos WAL;
+- estudos para utilização de múltiplos dispositivos Android como uma infraestrutura PostgreSQL distribuída.
+
+Após mais de dois anos de experimentação, pesquisa, falhas e ajustes, o projeto atingiu um nível de estabilidade experimental suficiente para ser documentado e publicado.
+
+Este repositório foi criado com o objetivo de tornar esse conhecimento acessível a outros profissionais e pesquisadores de tecnologia, permitindo que os experimentos sejam analisados, reproduzidos, criticados e aprimorados pela comunidade.
+
+---
+
 ## Arquitetura atual
 
 ```text

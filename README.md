@@ -49,6 +49,44 @@ This compatibility layer became an important part of getting PostgreSQL running 
 
 ---
 
+## Project History
+
+This project began more than two years ago as an attempt to run PostgreSQL functionally on Android devices using a complete Linux environment.
+
+The first experiments used Termux-based solutions and other methods for running Linux distributions on Android. Although these approaches made it possible to create Linux environments, they presented important limitations for the goals of this project. Virtualization-based solutions were also considered, but their resource requirements and performance overhead made this approach unsuitable for mobile devices with limited hardware.
+
+From that point, the experiments moved toward Android devices with unlocked bootloaders and root access. With superuser privileges, it became possible to create an Ubuntu chroot environment directly on top of the Android kernel and compile PostgreSQL inside that environment.
+
+This approach solved many of the limitations encountered earlier, but revealed a deeper problem: the traditional shared memory mechanism used by PostgreSQL did not work correctly within the Android environment.
+
+For a long period, different alternatives and technical references related to System V shared memory on Android were investigated. The solutions initially found were not sufficient to allow PostgreSQL to operate normally. Artificial intelligence tools available at the time were also used to assist the investigation, but they did not provide a working solution for this specific problem.
+
+The research continued until the discovery of the open source [`android-shmem`](https://github.com/pelya/android-shmem) project, originally developed by pelya and published many years earlier. The project implements a compatibility layer for shared memory functions that are absent or limited on Android.
+
+Through analysis of the C source code, repeated testing, and specific adaptations, it became possible to modify the required behavior so that PostgreSQL could use shared memory inside Ubuntu running in a chroot on Android.
+
+This was the point at which the project evolved from an experimental attempt to run PostgreSQL on a smartphone into a broader testing platform.
+
+Since then, the work has expanded to include:
+
+- native PostgreSQL compilation for different ARM architectures;
+- PostgreSQL running inside Ubuntu 24.04 chroot environments;
+- adaptation and testing of `android-shmem`;
+- experimental support for ARM64 and ARMHF devices;
+- remote PostgreSQL access over the network;
+- physical streaming replication between Android devices;
+- use of a hot standby for read queries;
+- ingestion benchmarks involving millions of rows;
+- WAL generation and retention analysis;
+- replica recovery testing after loss of WAL segments;
+- studies involving multiple Android devices as a distributed PostgreSQL infrastructure.
+
+After more than two years of experimentation, research, failures, and adjustments, the project reached a level of experimental stability sufficient to be documented and published.
+
+This repository was created to make this knowledge accessible to other technology professionals and researchers, allowing the experiments to be analyzed, reproduced, criticized, and improved by the community.
+
+---
+
 ## Current Architecture
 
 ```text
